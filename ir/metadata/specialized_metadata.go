@@ -1125,7 +1125,8 @@ type DILocation struct {
 	// (optional) Distinct.
 	Distinct bool
 
-	Line           int64       // optional; zero value if not present.
+	LineValid      bool        // optional; true when the line value should be emitted
+	Line           int64       // optional
 	Column         int64       // optional; zero value if not present.
 	Scope          Field       // required.
 	InlinedAt      *DILocation // optional; nil if not present.
@@ -1157,7 +1158,7 @@ func (md *DILocation) LLString() string {
 		buf.WriteString("distinct ")
 	}
 	var fields []string
-	if md.Line != 0 {
+	if md.LineValid {
 		field := fmt.Sprintf("line: %d", md.Line)
 		fields = append(fields, field)
 	}
