@@ -370,8 +370,11 @@ func (p *Param) String() string {
 	buf.WriteString(p.Type().String())
 	if _, isMetadataType := p.Type().(*types.MetadataType); !isMetadataType {
 		for _, attr := range p.Attrs {
-			buf.WriteRune(' ')
-			buf.WriteString(attr.String())
+			s := attr.String()
+			if s == "nonnull" {
+				buf.WriteRune(' ')
+				buf.WriteString(s)
+			}
 		}
 	}
 	buf.WriteRune(' ')
