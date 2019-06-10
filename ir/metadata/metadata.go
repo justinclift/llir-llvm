@@ -124,6 +124,29 @@ func (md *Value) Type() types.Type {
 
 // Ident returns the identifier associated with the metadata value.
 func (md *Value) Ident() string {
+	// If this is a *ir.Param, return the identifier associated with the metadata value, without parameter attributes.
+	switch fmt.Sprintf("%T", md.Value) {
+	case "*ir.Param":
+		id := md.Value.String()
+		s := strings.Split(id, " ")
+		var output []string
+		for _, j := range s {
+			switch j {
+			case "nocapture", "readonly", "returned":
+				continue
+			default:
+				output = append(output, j)
+			}
+		}
+		var buf strings.Builder
+		for i, j := range output {
+			if i != 0 {
+				buf.WriteString(" ")
+			}
+			buf.WriteString(j)
+		}
+		return buf.String()
+	}
 	return md.Value.String()
 }
 
